@@ -20,27 +20,24 @@ namespace jeu_du_pendu
                     string dessin = pendu.RecupererAscii();
                     Console.WriteLine(dessin + "\n\n");
 
-                    if (pendu.Gagne)
+                    if(pendu.Termine)
                     {
-                        Console.WriteLine("Bravo ! Vous avez trouvé le mot.");
-                        break;
-                    }
-                    if (pendu.Perdu)
-                    {
-                        Console.WriteLine("Désolé, vous avez perdu :-(");
-                        Console.WriteLine("Le mot a trouvé était: " + pendu.Mot);
+                        FinDeLaPartie(pendu);
                         break;
                     }
 
                     string lettresTrouves = pendu.RecupererLettresTrouves();
                     Console.WriteLine(lettresTrouves + "\n\n");
 
-                    Console.Write("Saisissez une lettre: ");
-                    string? lettre = Console.ReadLine();
-                    if (string.IsNullOrEmpty(lettre) || lettre.Length != 1)
-                        Console.WriteLine("Vous devez saisir une lettre");
-                    else
+                    try
+                    {
+                        string lettre = SaisissezUneLettre();
                         pendu.NouvelEssai(lettre);
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Vous devez saisir une lettre");
+                    }
                 }
 
                 Console.Write("Nouvelle parties (o/n) ? ");
@@ -54,6 +51,26 @@ namespace jeu_du_pendu
             string[] lines = File.ReadAllLines(filePath);
             return lines.ToList<string>();
             
+        }
+
+        public static void FinDeLaPartie(Pendu pendu)
+        {
+            if (pendu.Gagne)
+                Console.WriteLine("Bravo ! Vous avez gagné !");
+            if (pendu.Perdu)
+                Console.WriteLine("Désolé, vous avez perdu :-(");
+
+            Console.WriteLine("Le mot a trouvé était: " + pendu.Mot);
+        }
+
+        public static string SaisissezUneLettre()
+        {
+            Console.Write("Saisissez une lettre: ");
+            string? lettre = Console.ReadLine();
+            if (string.IsNullOrEmpty(lettre) || lettre.Length != 1)
+                throw new Exception();
+
+            return lettre;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace jeu_du_pendu
 {
     public class Pendu
@@ -95,6 +96,14 @@ namespace jeu_du_pendu
             }
         }
 
+        public bool Termine
+        {
+            get
+            {
+                return this.Perdu || this.Gagne;
+            }
+        }
+
         public Pendu(string mot)
         {
             _mot = mot.ToLower();
@@ -104,7 +113,7 @@ namespace jeu_du_pendu
         {
             Random r = new Random();
             int indexMot = r.Next(0, mots.Count());
-            _mot = mots[indexMot].ToLower();
+            _mot = mots[indexMot].ToLower().RemoveDiacritics();
         }
 
         public string RecupererAscii()
@@ -129,7 +138,8 @@ namespace jeu_du_pendu
 
         public void NouvelEssai(string lettre)
         {
-            if (_mot.Contains(lettre.ToLower()))
+            lettre = lettre.ToLower().RemoveDiacritics();
+            if (_mot.Contains(lettre))
                 _lettresTrouves.Add(lettre[0]);
             else
                 _nbEssai++;
